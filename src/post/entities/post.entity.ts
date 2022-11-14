@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { User } from "src/auth/entities/user.entity"
+import { Category } from "src/category/entities/category.entity"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity('posts')
 export class Post {
@@ -22,4 +24,14 @@ export class Post {
 
     @Column()
     mainImageUrl: string
+
+    @ManyToOne(() => User, (user) => user.posts, {
+        eager: true,
+    })
+    user: User
+
+    @ManyToOne(() => Category, (category) => category.posts, {
+        eager: true
+    })
+    category: Category
 }
