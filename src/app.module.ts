@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { PostModule } from './post/post.module';
       port: 3306,
       autoLoadEntities: true,
       synchronize: true
-    })
+    }),
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
