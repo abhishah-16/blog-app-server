@@ -1,6 +1,11 @@
 import { User } from "src/auth/entities/user.entity"
 import { Category } from "src/category/entities/category.entity"
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn
+} from "typeorm"
 
 @Entity('posts')
 export class Post {

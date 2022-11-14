@@ -17,7 +17,8 @@ import { AuthModule } from './auth/auth.module';
       password: 'Abhishah@169',
       port: 3306,
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: true,
+      logging: true
     }),
     CategoryModule,
     AuthModule

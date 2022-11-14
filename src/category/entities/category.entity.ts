@@ -1,6 +1,11 @@
 
 import { Post } from "src/post/entities/post.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+    Column,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn
+} from "typeorm";
 
 @Entity('category')
 export class Category {
