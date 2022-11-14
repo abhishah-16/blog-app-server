@@ -6,11 +6,11 @@ import {
 import { Category } from "src/category/entities/category.entity"
 
 export class CreatePostDto {
-    @IsNotEmpty()
+    @IsNotEmpty({message:'Please Enter Title'})
     @IsString()
     title: string
 
-    @IsNotEmpty()
+    @IsNotEmpty({message:'Please Enter Content'})
     @IsString()
     content: string
 
