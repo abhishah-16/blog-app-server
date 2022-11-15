@@ -38,7 +38,7 @@ export class Post {
     @Exclude()
     userId: number
 
-    @Column({ default: 2 })
+    @Column({ default: 6 })
     @Exclude()
     categoryId: number
 

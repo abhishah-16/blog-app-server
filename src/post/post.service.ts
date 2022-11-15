@@ -17,9 +17,33 @@ export class PostService {
     return await this.postRepo.save(post)
   }
 
-  async findAll() {
-    const posts = await this.postRepo.find()
-    return posts
+  async findAll(query?: string) {
+    console.log(query);
+    const myquery =
+      this.postRepo.createQueryBuilder("post")
+        .leftJoinAndSelect("post.category", "category")
+        .leftJoinAndSelect("post.user", "user")
+
+    if (!(Object.keys(query).length == 0) && query.constructor == Object) {
+      const queryKeys = Object.keys(query)
+
+      if (queryKeys.includes('title')) {
+        myquery.where('post.title LIKE :title', { title: `%${query['title']}%` })
+      }
+
+      if (queryKeys.includes('sort')) {
+        myquery.orderBy('post.title', query['sort'].toUpperCase())
+      }
+
+      if (queryKeys.includes('category')) {
+        myquery.andWhere('category.title = :cat', { cat: query['category'] })
+      }
+
+      return await myquery.getMany()
+
+    } else {
+      return await myquery.getMany()
+    }
   }
 
   async findOne(id: number) {
@@ -37,7 +61,6 @@ export class PostService {
     } else {
       return await this.postRepo.update(id, updatePostDto)
     }
-
   }
 
   async remove(id: number) {
