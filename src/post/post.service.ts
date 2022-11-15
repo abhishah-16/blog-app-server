@@ -54,13 +54,23 @@ export class PostService {
     return post
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
-    if (updatePostDto.title) {
-      const slug = updatePostDto.title.split(" ").join('_').toLowerCase()
-      return await this.postRepo.update(id, { ...updatePostDto, slug })
-    } else {
-      return await this.postRepo.update(id, updatePostDto)
+  async findBySlug(slug: string) {
+    const post = await this.postRepo.findOneBy({ slug })
+    if (!post) {
+      throw new BadRequestException('Post not found')
     }
+    return post
+  }
+
+  async update(slug: string, updatePostDto: UpdatePostDto) {
+    const post = await this.postRepo.findOneBy({ slug })
+    if (!post) {
+      throw new BadRequestException('Post not found')
+    }
+    post.updatedAt = new Date(Date.now())
+    post.category = updatePostDto.category
+    Object.assign(post, updatePostDto)
+    return await this.postRepo.save(post)
   }
 
   async remove(id: number) {

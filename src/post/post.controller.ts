@@ -37,9 +37,14 @@ export class PostController {
     return this.postService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @Get('/slug/:slug')
+  findOneBySlug(@Param('slug') slug: string) {
+    return this.postService.findBySlug(slug);
+  }
+
+  @Patch(':slug')
+  update(@Param('slug') slug: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postService.update(slug, updatePostDto);
   }
 
   @Delete(':id')
