@@ -7,13 +7,16 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('post')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostController {
   constructor(private readonly postService: PostService) { }
 

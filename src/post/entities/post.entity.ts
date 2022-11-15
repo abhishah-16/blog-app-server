@@ -1,12 +1,15 @@
 import { User } from "src/auth/entities/user.entity"
 import { Category } from "src/category/entities/category.entity"
 import {
+    BeforeInsert,
     Column,
     Entity,
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn
 } from "typeorm"
+import slugify from 'slugify';
+import { Exclude } from "class-transformer";
 
 @Entity('posts')
 export class Post {
@@ -32,9 +35,11 @@ export class Post {
     mainImageUrl: string
 
     @Column({ default: 1 })
+    @Exclude()
     userId: number
 
     @Column({ default: 2 })
+    @Exclude()
     categoryId: number
 
     @ManyToOne(() => User, (user) => user.posts, {
@@ -54,4 +59,12 @@ export class Post {
         referencedColumnName: 'id'
     })
     category: Category
+
+    @BeforeInsert()
+    slugifyPost() {
+        this.slug = slugify(this.title, {
+            lower: true,
+            replacement: '_'
+        })
+    }
 }

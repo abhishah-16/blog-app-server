@@ -1,10 +1,13 @@
 import { Post } from "src/post/entities/post.entity";
 import {
+    BeforeInsert,
     Column,
     Entity,
     OneToMany,
     PrimaryGeneratedColumn
 } from "typeorm";
+import * as bcrypt from "bcryptjs"
+import { Exclude } from "class-transformer";
 
 @Entity('users')
 export class User {
@@ -20,7 +23,7 @@ export class User {
     @Column()
     email: string
 
-    @Column()
+    @Column({ select: false })
     password: string
 
     @Column()
@@ -28,5 +31,10 @@ export class User {
 
     @OneToMany(() => Post, (post) => post.user)
     posts: Post[]
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 12)
+    }
 
 }

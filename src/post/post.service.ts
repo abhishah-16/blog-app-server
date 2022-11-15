@@ -11,9 +11,10 @@ export class PostService {
   constructor(@InjectRepository(Post) private readonly postRepo: Repository<Post>) { }
 
   async create(createPostDto: CreatePostDto) {
-    const slug = createPostDto.title.split(" ").join('_').toLowerCase()
-
-    return await this.postRepo.insert({ ...createPostDto, slug })
+    const post = new Post()
+    Object.assign(post, createPostDto)
+    this.postRepo.create(post)
+    return await this.postRepo.save(post)
   }
 
   async findAll() {
