@@ -6,11 +6,11 @@ import {
 import { Category } from "src/category/entities/category.entity"
 
 export class CreatePostDto {
-    @IsNotEmpty({message:'Please Enter Title'})
+    @IsNotEmpty({ message: 'Please Enter Title' })
     @IsString()
     title: string
 
-    @IsNotEmpty({message:'Please Enter Content'})
+    @IsNotEmpty({ message: 'Please Enter Content' })
     @IsString()
     content: string
 
@@ -20,4 +20,8 @@ export class CreatePostDto {
 
     @IsOptional()
     category: Category
+
+    @IsOptional()
+    categoryId: number
+
 }
