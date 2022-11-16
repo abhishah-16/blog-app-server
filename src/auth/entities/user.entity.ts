@@ -26,15 +26,14 @@ export class User {
     @Column({ select: false })
     password: string
 
-    @Column()
+    @Column({ default: null })
     profilePic: string
 
     @OneToMany(() => Post, (post) => post.user)
     posts: Post[]
 
     @BeforeInsert()
-    async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 12)
+    hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 12);
     }
-
 }
