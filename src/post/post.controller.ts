@@ -18,8 +18,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { Request } from 'express';
+import { currentUserGuard } from 'src/auth/current-user.guard';
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,13 +27,14 @@ export class PostController {
 
   @Post()
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard('jwt'))
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
-  findAll(@Query() query: any, @Req() req: Request) {
+  @UseGuards(currentUserGuard)
+  findAll(@Query() query: any) {
     return this.postService.findAll(query);
   }
 
@@ -49,11 +49,13 @@ export class PostController {
   }
 
   @Patch(':slug')
+  @UseGuards(AuthGuard('jwt'))
   update(@Param('slug') slug: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(slug, updatePostDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
     return this.postService.remove(+id);
   }
