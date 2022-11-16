@@ -26,7 +26,10 @@ export class AuthController {
       maxAge: 2 * 60 * 60 * 1000
     })
     res.cookie('isAuthenticated', true, { maxAge: 2 * 60 * 60 * 1000 })
-    return res.send({ success: true, user })
+    // return res.send({ success: true, user })
+    // const mesg = await this.authService.login(logindto)
+    res.send({ sucess: true, user })
+    // return mesg
   }
 
   @Post('register')

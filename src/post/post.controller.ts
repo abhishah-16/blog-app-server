@@ -10,11 +10,16 @@ import {
   ValidationPipe,
   UseInterceptors,
   ClassSerializerInterceptor,
-  Query
+  Query,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { Request } from 'express';
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,7 +33,8 @@ export class PostController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Query() query: any, @Req() req: Request) {
     return this.postService.findAll(query);
   }
 
