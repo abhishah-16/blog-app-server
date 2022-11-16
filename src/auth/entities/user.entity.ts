@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn
 } from "typeorm";
 import * as bcrypt from "bcryptjs"
-import { Exclude } from "class-transformer";
+import { userRoles } from "../user.roles";
 
 @Entity('users')
 export class User {
@@ -31,6 +31,9 @@ export class User {
 
     @OneToMany(() => Post, (post) => post.user)
     posts: Post[]
+
+    @Column({ type: 'enum', enum: userRoles, default: userRoles.Reader })
+    roles: userRoles
 
     @BeforeInsert()
     hashPassword() {

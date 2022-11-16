@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
+import { AccessControlModule } from 'nest-access-control';
+import { roles } from './auth/user.roles';
 
 @Module({
   imports: [
@@ -21,7 +23,8 @@ import { AuthModule } from './auth/auth.module';
       logging: true
     }),
     CategoryModule,
-    AuthModule
+    AuthModule,
+    AccessControlModule.forRoles(roles)
   ],
   controllers: [AppController],
   providers: [AppService],

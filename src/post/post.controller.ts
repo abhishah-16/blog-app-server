@@ -14,16 +14,18 @@ import {
   UseGuards,
   Req,
   UploadedFile,
-  BadRequestException
+  BadRequestException,
+  Res
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { currentUserGuard } from 'src/auth/current-user.guard';
-import { Express } from "express"
+import { Express, Request, Response } from "express"
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ACGuard, UseRoles } from 'nest-access-control';
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -32,7 +34,12 @@ export class PostController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), ACGuard)
+  @UseRoles({
+    possession: 'any',
+    action: 'create',
+    resource: 'post'
+  })
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
@@ -80,6 +87,11 @@ export class PostController {
       }
       return res
     }
+  }
+
+  @Get('/picture/:filename')
+  async getPicture(@Param('filename') filename, @Res() res: Response) {
+    res.sendFile(filename, { root: './uploads' })
   }
 
   @Patch(':slug')
