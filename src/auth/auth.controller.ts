@@ -2,13 +2,19 @@ import {
   Controller,
   Post,
   Body,
-  Res
+  Res,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
@@ -21,5 +27,11 @@ export class AuthController {
     })
     res.cookie('isAuthenticated', true, { maxAge: 2 * 60 * 60 * 1000 })
     return res.send({ success: true, user })
+  }
+
+  @Post('register')
+  @UsePipes(ValidationPipe)
+  async userRegister(@Body() registerdto: CreateUserDto) {
+    return this.authService.register(registerdto)
   }
 }

@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
 import { UserLoginDto } from './dto/user-login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from "bcryptjs"
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid Credentials')
     } else {
       if (await this.verifyPassword(logindto.password, user.password)) {
-        const token = this.jwt.signAsync({
+        const token = await this.jwt.signAsync({
           email: user.email,
           id: user.id
         })
@@ -33,6 +34,21 @@ export class AuthService {
       } else {
         throw new UnauthorizedException('Invalid Credentials')
       }
+    }
+  }
+
+  async register(createuserDto: CreateUserDto) {
+    const { email } = createuserDto
+    const checkuser = await this.userRepo.findOneBy({ email })
+    if (checkuser) {
+      throw new BadRequestException('Email already exist')
+    } else {
+      const user = new User()
+      Object.assign(user, createuserDto)
+      this.userRepo.create(user)
+      await this.userRepo.save(user)
+      delete user.password
+      return user
     }
   }
 
